@@ -1,32 +1,31 @@
-const {DataTypes} = require('sequelize')
-const sequelize = require('../database/dataSource')
-
+const { DataTypes } = require("sequelize");
+const sequelize = require("../database/dataSource");
 
 const Users = sequelize.define(
-  'Users' ,
+  "Users",
   {
-    user_id: {
-      type : DataTypes.INTEGER,
-      primaryKey : true,
-      autoIncrement : true,
+    first_name: {
+      type: DataTypes.STRING,
     },
-    username: {
-      type : DataTypes.STRING,
-      allowNull : false,
+    last_name: {
+      type: DataTypes.STRING,
     },
-    password : {
-      type : DataTypes.STRING,
-      allowNull : false,
+    age: {
+      type: DataTypes.INTEGER,
     },
-    age : {
-      type : DataTypes.INTEGER,
-      defaultValue : 21,
+    gender: {
+      type: DataTypes.ENUM("male", "female"),
+    },
+    phone_number: {
+      type: DataTypes.STRING,
+    },
+    email : {
+      type: DataTypes.STRING,
     }
   },
   {
-    freezeTableName : true,
-    timestamps : false,
-
+    freezeTableName: true,
+    
   }
-);
+)
 module.exports = Users;

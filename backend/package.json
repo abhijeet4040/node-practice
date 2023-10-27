@@ -9,9 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "await-to-js": "^3.0.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "joi": "^17.11.0",
     "mysql2": "^3.6.2",
     "sequelize": "^6.33.0"
   }

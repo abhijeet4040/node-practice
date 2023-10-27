@@ -1,29 +1,33 @@
 const Users = require("../models/Users.model");
 
-const getAllUsersFromDb = async () => {
-  const users = await Users.findAll();
-  return users;
-};
-
 const deleteUsersFromDb = async (req) => {
-  const users = await Users.destroy({
-    where: { user_id: req.params.id },
+  return Users.destroy({
+    where: { id: req.params.id },
   });
 };
 
 const addUsersFromDb = async (req) => {
-  const users = await Users.create(req.body);
-  return users;
+  return Users.create(req.body);
 };
 
-const paginateDb = async (req) => {
-    const page = parseInt(req.query.page);
-    const limit = parseInt(req.query.limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const users = await Users.findAll()
-    const updatedUsers =users.splice(startIndex, endIndex);
-    return updatedUsers;
-}
+const updateDb = async (req) => {
+  return Users.update(placeholder, {
+    where: { id: userId },
+  });
+};
 
-module.exports = { getAllUsersFromDb, deleteUsersFromDb, addUsersFromDb, paginateDb };
+
+
+const getUsersDb = async (sort, order, filter) => {
+  return await Users.findAll({
+    where: filter,
+    order: [[sort, order]],
+  });
+};
+
+module.exports = {
+  deleteUsersFromDb,
+  addUsersFromDb,
+  updateDb,
+  getUsersDb,
+};

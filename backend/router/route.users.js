@@ -1,14 +1,14 @@
-const {getAllUsersController, deleteUsersController, addUserController, paginationController, } = require("../controller/Users.controller");
+const { deleteUsersController, addUserController, updateUsersController, getUserController, } = require("../controller/Users.controller");
 
-app.get("/users", getAllUsersController);
+
 
 app.post("/add", addUserController);
 
-// app.put("/update", updateUsersController);
+app.put("/update/:id", updateUsersController);
 
 app.delete( "/delete/:id", deleteUsersController);
 
-app.get("/page", paginationController);
+app.get("/user", getUserController);
 
 
 

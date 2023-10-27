@@ -1,111 +1,100 @@
 const { Response_Codes, Response_Message } = require("../core/constants");
+const to = require("await-to-js").default;
+
 const responseHandler = require("../core/responseHandler");
 const {
-  getAllUsersFromDb,
   deleteUsersFromDb,
   addUsersFromDb,
-  paginateDb,
+  updateDb,
+  getUsersDb,
 } = require("../dbLayer/dbLayer");
 
-const getUsersDataService = async (req, res) => {
-  try {
-    const result = await getAllUsersFromDb();
-    if (result) {
-      responseHandler({
-        statusCode : Response_Codes.SUCCESS_OK, error : true,
-        data : result,
-        res,
-        message: Response_Message.FETCHED,
-      })
-    } else {
-      responseHandler({
-        statusCode : Response_Codes.SUCCESS_NO_CONTENT,
-        data : result,
-        res,
-        message : Response_Message.FETCHED_NOT_FOUND,
-      })
-    }
-  } catch(err) {
-    responseHandler({
-      statusCode : Response_Codes.FAILURE_INT_SERVER_ERROR
-    })
-  }
-  
-};
-
 const deleteUserService = async (req, res) => {
-  try {
-    const result = await deleteUsersFromDb(req.body);
-    if (result) {
-      responseHandler({
-        statusCode: Response_Codes.SUCCESS_OK,
-        data: req.body,
-        res,
-        message: Response_Message.DELETE_SUCCESS,
-      });
-    } else {
-      responseHandler({
-        statusCode: Response_Codes.SUCCESS_OK,
-        res,
-        message: Response_Message.FETCHED_NOT_FOUND,
-      });
-    }
-  } catch (err) {
+  const [error, result] = await to(deleteUsersFromDb(req));
+  if (!error) {
     responseHandler({
-      statusCode: Response_Codes.FAILURE_INT_SERVER_ERROR,
-      error: true,
+      statusCode: Response_Codes.SUCCESS_OK,
+      data: req.body,
       res,
-      message: err.message,
+      message: Response_Message.DELETE_SUCCESS,
+    });
+  } else {
+    responseHandler({
+      statusCode: Response_Codes.SUCCESS_OK,
+      res,
+      message: Response_Message.FETCHED_NOT_FOUND,
     });
   }
 };
 
 const addUserService = async (req, res) => {
-  try {
-    const result = await addUsersFromDb(req, res);
+  const [error, result] = await to(addUsersFromDb(req));
 
-    if (result) {
-      responseHandler({
-        statusCode: Response_Codes.SUCCESS_OK,
-        data: result,
-        res,
-        message: Response_Message.UPDATE_SUCCESS,
-      });
-    } else {
-      responseHandler({
-        statusCode: Response_Codes.SUCCESS_NO_CONTENT,
-        res,
-        message: Response_Message.FETCHED_NOT_FOUND,
-      });
-    }
-  } catch (err) {
+  if (!error) {
     responseHandler({
-      statusCode: Response_Codes.FAILURE_INT_SERVER_ERROR,
-      error: true,
+      statusCode: Response_Codes.SUCCESS_OK,
+      data: result,
       res,
-      message: err.message,
+      message: Response_Message.UPDATE_SUCCESS,
+    });
+  } else {
+    responseHandler({
+      statusCode: Response_Codes.SUCCESS_NO_CONTENT,
+      res,
+      error: true,
+      message: Response_Message.FETCHED_NOT_FOUND,
     });
   }
 };
 
-const paginateDBservice = async (req, res) => {
-  const result = await paginateDb(req);
-  if (result) {
+const updateUserService = async (req, res) => {
+  const userId = req.params.id;
+  const placeholder = req.query;
+  const [error, result] = await to(updateDb(userId, placeholder));
+  if (!error) {
     responseHandler({
-      statusCode : Response_Codes.SUCCESS_OK,
-      data : result,
+      statusCode: Response_Codes.SUCCESS_CREATED,
+      data: result,
       res,
-      message : Response_Message.FETCHED,
-    })
+      message: Response_Message.UPDATE_SUCCESS,
+    });
   } else {
     responseHandler({
-      statusCode : Response_Codes.SUCCESS_NO_CONTENT,
-      error : false,
+      statusCode: Response_Codes.FAILURE_INT_SERVER_ERROR,
       res,
-      message : Response_Message.FETCHED_NOT_FOUND,
-    })
-  } 
-}
+      error: true,
+      message: Response_Message.INSERT_AL_EXIST,
+    });
+  }
+};
 
-module.exports = { getUsersDataService, deleteUserService, addUserService,paginateDBservice };
+const getUserService = async (req, res) => {
+  const {sort = "createdAt", order= "ASC",page = 1, limit = 3, ...filter} = req.query || {};
+  const [error, result] = await to(getUsersDb(sort,order,filter));
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  if (!error) {
+    const data = result.slice(startIndex, endIndex);
 
+    responseHandler({
+      statusCode: Response_Codes.SUCCESS_OK,
+      res,
+      data: data,
+      message: Response_Message.FETCHED,
+    });
+  } else {
+    responseHandler({
+      statusCode: Response_Codes.FAILURE_NOT_FOUND,
+      res,
+      error : true,
+      message: Response_Message.FETCHED_NOT_FOUND,
+    });
+  }
+};
+
+module.exports = {
+  deleteUserService,
+  addUserService,
+  updateUserService,
+  getUserService,
+};
