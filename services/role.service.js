@@ -4,8 +4,7 @@ const { responseHandler } = require("../core/responseHandler");
 const { Response_Codes, Response_Message } = require("../core/constants");
 
 const createRoleService = async (req, res) => {
-    const role = req.body.role_name;
-    const [error, result] = await to(createRoleInDb(role));
+    const [error, result] = await to(createRoleInDb(req));
     if (!error) {
       responseHandler({
         statusCode: Response_Codes.SUCCESS_CREATED,
@@ -23,9 +22,12 @@ const createRoleService = async (req, res) => {
     }
 };
 
-const getAllDataService  = async (req, res) => {
-  const role = req.body.role_name;
-  const [error, result] = await to(getAllUsersInDb(role));
+const getAllDataService  = async (_req, res) => {
+  console.log('insider service')
+
+  const [error, result] = await to(getAllUsersInDb());
+  console.log(error,'------______________------',result)
+
   if (!error) {
     responseHandler({
       statusCode: Response_Codes.SUCCESS_CREATED,
@@ -43,9 +45,8 @@ const getAllDataService  = async (req, res) => {
   }
 };
 
-const getAllDataLeftService  = async (req, res) => {
-  const role = req.body.role_name;
-  const [error, result] = await to(getDataLeftInDb(role));
+const getAllDataLeftService  = async (_req, res) => {
+  const [error, result] = await to(getDataLeftInDb());
   if (!error) {
     responseHandler({
       statusCode: Response_Codes.SUCCESS_CREATED,
@@ -63,13 +64,13 @@ const getAllDataLeftService  = async (req, res) => {
   }
 };
 
-const getAllDataRightService = async (req, res) => {
-  const role = req.body.role_name;
-  const [error, result] = await to(getDataRightInDb(role));
+const getAllDataRightService = async (_req, res) => {
+  const [error, result] = await to(getDataRightInDb());
+  console.log(error,'-------__________---------',result);
   if (!error) {
     responseHandler({
-      statusCode: Response_Codes.SUCCESS_CREATED,
-      message: Response_Message.INSERT_SUCCESS,
+      statusCode: Response_Codes.SUCCESS_OK,
+      message: Response_Message.FETCHED,
       data: result,
       res,
     });

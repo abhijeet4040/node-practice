@@ -5,7 +5,7 @@ const createRoleInDb = async (req) => {
   return await role.create(req.body);
 };
 
-const getDataRightInDb = async (data) => {
+const getDataRightInDb = async () => {
   const sql = ` SELECT role.*, user.* 
     FROM role 
     RIGHT JOIN user ON role.User_id = user.User_id;
@@ -15,7 +15,7 @@ const getDataRightInDb = async (data) => {
   });
 };
 
-const getDataLeftInDb = async (data) => {
+const getDataLeftInDb = async () => {
   const sql = ` SELECT role.*, user.* 
     FROM role 
     JOIN user ON role.User_id = user.User_id;
@@ -25,10 +25,12 @@ const getDataLeftInDb = async (data) => {
   });
 };
 
-const getAllUsersInDb = async (data) => {
-  const sql = `SELECT role.*, user.* 
+const getAllUsersInDb = async () => {
+  console.log('insider db')
+
+  const sql = `SELECT role.*, user.*
                FROM role
-               INNER JOIN user ON role.User_id = user.User_id;`;
+               INNER JOIN user ON role.User_id = user.User_id;`
   return await sequelize.query(sql, {
     type: sequelize.QueryTypes.SELECT,
   });

@@ -18,8 +18,8 @@ const createUserService = async (req, res) => {
       responseHandler({
         statusCode: Response_Codes.FAILURE_SERVICE_UNAVAILABLE,
         res,
-        message: err,
-        error: true,
+        message: Response_Message.FAILURE_FORBIDDEN_ACCESS,
+        error: err.message,
       });
     } else {
       req.body.password = data;
@@ -37,8 +37,8 @@ const createUserService = async (req, res) => {
         responseHandler({
           statusCode: Response_Codes.FAILURE_INT_SERVER_ERROR,
           res,
-          error: true,
-          message: error,
+          error: Response_Message.FAILURE_FORBIDDEN_ACCESS,
+          message: error.message,
         });
       }
     }

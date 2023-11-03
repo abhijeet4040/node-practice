@@ -1,5 +1,5 @@
-const { user } = require("../models/user");
 const { Op } = require("sequelize");
+const user = require("../models/user");
 
 const createUserInDb = async (req) => {
   return await user.create(req.body);

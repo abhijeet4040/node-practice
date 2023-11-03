@@ -2,8 +2,8 @@ const { createRoleController, getAllDataController, getAllDataRightController, g
 
 app.post('/createRole' , createRoleController );
 
-app.post('/getAllData' , getAllDataController);
+app.get('/getAllData' , getAllDataController);
 
-app.post('getAllDataRight' , getAllDataRightController);
+app.get('/getAllDataRight' , getAllDataRightController);
 
-app.post('getAllDataLeft' , getAllDataLeftController);
+app.get('/getAllDataLeft' , getAllDataLeftController);

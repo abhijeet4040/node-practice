@@ -19,6 +19,7 @@ const createRoleController = async (req, res,) => {
 };
 
 const getAllDataController = async (req , res) => {
+    console.log('insider controllre')
     getAllDataService(req , res);
 };
 
