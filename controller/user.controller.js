@@ -19,7 +19,7 @@ const createUserController = async (req, res) => {
       message: error.message,
     });
   }
-  createUserService(req, res);
+  await createUserService(req, res);
 };
 
 const deleteUserController = async (req, res) => {
